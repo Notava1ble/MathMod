@@ -6,9 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 public class MathVariables {
-  private Map<String, Float> variables;
+  private Map<String, String> variables;
 
-  public List<Map.Entry<String, Float>> getAllVariables() {
+  public int getSize() {
+    return variables.size();
+  }
+
+  public List<Map.Entry<String, String>> getAllVariables() {
     return new ArrayList<>(variables.entrySet());
   }
 
@@ -17,12 +21,12 @@ public class MathVariables {
   }
 
   // Add or update a variable
-  public void setVariable(String name, float value) {
+  public void setVariable(String name, String value) {
     variables.put(name, value);
   }
 
   // Get the value of a variable
-  public Float getVariable(String name) {
+  public String getVariable(String name) {
     return variables.get(name);
   }
 

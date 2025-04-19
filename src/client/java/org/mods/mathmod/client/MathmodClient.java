@@ -80,10 +80,10 @@ public class MathmodClient implements ClientModInitializer {
                 .then(ClientCommandManager.literal("variable")
                     .then(ClientCommandManager.literal("set")
                         .then(ClientCommandManager.argument("name", StringArgumentType.string())
-                            .then(ClientCommandManager.argument("value", FloatArgumentType.floatArg())
+                            .then(ClientCommandManager.argument("value", StringArgumentType.string())
                                 .executes(context -> {
                                   String name = StringArgumentType.getString(context, "name");
-                                  float value = FloatArgumentType.getFloat(context, "value");
+                                  String value = StringArgumentType.getString(context, "value");
 
                                   variables.setVariable(name, value);
                                   context.getSource().sendFeedback(Text.literal("Added variable \"" + name + "\" with value \"" + value + "\""));
@@ -95,7 +95,7 @@ public class MathmodClient implements ClientModInitializer {
                     .then(ClientCommandManager.literal("get")
                         .then(ClientCommandManager.argument("name", StringArgumentType.string())
                             .suggests((context, builder) -> {
-                              for (Map.Entry<String, Float> entry : variables.getAllVariables()) {
+                              for (Map.Entry<String, String> entry : variables.getAllVariables()) {
                                 builder.suggest(entry.getKey());
                               }
                               return builder.buildFuture();
@@ -103,7 +103,7 @@ public class MathmodClient implements ClientModInitializer {
                             .executes(context -> {
                               String name = StringArgumentType.getString(context, "name");
                               if (variables.hasVariable(name)) {
-                                float value = variables.getVariable(name);
+                                String value = variables.getVariable(name);
                                 context.getSource().sendFeedback(Text.literal(String.valueOf(value)));
                               } else {
                                 throw new SimpleCommandExceptionType(Text.literal("The variable \"" + name + "\" does not exist")).create();
@@ -115,7 +115,7 @@ public class MathmodClient implements ClientModInitializer {
                     .then(ClientCommandManager.literal("delete")
                         .then(ClientCommandManager.argument("name", StringArgumentType.string())
                             .suggests((context, builder) -> {
-                              for (Map.Entry<String, Float> entry : variables.getAllVariables()) {
+                              for (Map.Entry<String, String> entry : variables.getAllVariables()) {
                                 builder.suggest(entry.getKey());
                               }
                               return builder.buildFuture();
@@ -134,8 +134,12 @@ public class MathmodClient implements ClientModInitializer {
                     )
                     .then(ClientCommandManager.literal("list")
                         .executes(context -> {
-                          for (Map.Entry<String, Float> entry : variables.getAllVariables()) {
-                            context.getSource().sendFeedback(Text.literal(entry.getKey() + ": " + entry.getValue()));
+                          if (variables.getSize() == 0) {
+                            context.getSource().sendFeedback(Text.literal("There are no variables"));
+                          } else {
+                            for (Map.Entry<String, String> entry : variables.getAllVariables()) {
+                              context.getSource().sendFeedback(Text.literal(entry.getKey() + ": " + entry.getValue()));
+                            }
                           }
                           return 1;
                         })
