@@ -33,17 +33,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MathmodClient implements ClientModInitializer {
-  // Config Setup
+  // Set up Configuration file for Decimal Precision
   private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
   private static final Path CONFIG_PATH =
       FabricLoader.getInstance().getConfigDir().resolve("mathConfig.json");
 
   private static ModConfig config;
 
-  // Logger Setup
+  // Set up Logger
   public static final Logger LOGGER = LoggerFactory.getLogger("MyModName");
 
-  // Errors
+  // Constant Error used in command math operations
   private static final SimpleCommandExceptionType DIVIDE_BY_ZERO =
       new SimpleCommandExceptionType(Text.literal("Cannot divide by zero."));
   private static final SimpleCommandExceptionType INVALID_EXPR =
@@ -52,10 +52,13 @@ public class MathmodClient implements ClientModInitializer {
 
   @Override
   public void onInitializeClient() {
-    // Load Config
+    // Load Config from json
     config = loadConfig();
+
+    // Load variables
     MathVariables variables = new MathVariables();
 
+    // Register Commands
     ClientCommandRegistrationCallback.EVENT.register(
         (dispatcher, registryAccess) -> dispatcher.register(
             // Implements the "math" command
@@ -81,6 +84,7 @@ public class MathmodClient implements ClientModInitializer {
                 )
                 // The variable sub-command
                 .then(ClientCommandManager.literal("variable")
+                    // Set(create) a new variable
                     .then(ClientCommandManager.literal("set")
                         .then(ClientCommandManager.argument("name", StringArgumentType.string())
                             .then(ClientCommandManager.argument("value", StringArgumentType.string())
@@ -95,6 +99,7 @@ public class MathmodClient implements ClientModInitializer {
                             )
                         )
                     )
+                    // Get a created variable
                     .then(ClientCommandManager.literal("get")
                         .then(ClientCommandManager.argument("name", StringArgumentType.string())
                             .suggests((context, builder) -> {
@@ -115,6 +120,7 @@ public class MathmodClient implements ClientModInitializer {
                             })
                         )
                     )
+                    // Delete a created variable
                     .then(ClientCommandManager.literal("delete")
                         .then(ClientCommandManager.argument("name", StringArgumentType.string())
                             .suggests((context, builder) -> {
@@ -135,6 +141,7 @@ public class MathmodClient implements ClientModInitializer {
                             })
                         )
                     )
+                    // List all created variables
                     .then(ClientCommandManager.literal("list")
                         .executes(context -> {
                           if (variables.getSize() == 0) {
@@ -263,8 +270,9 @@ public class MathmodClient implements ClientModInitializer {
                         )
                     )
                 )
-                // Other less useful math functions:
-                // "abs"
+
+                // OTHER LESS USEFUL MATH FUNCTIONS
+                // The absolute function (returns the positive of a number): "abs"
                 .then(ClientCommandManager.literal("abs")
                     .then(ClientCommandManager.argument("x", FloatArgumentType.floatArg())
                         .suggests(CommandUtils.suggestPlayerXZ)
@@ -280,7 +288,7 @@ public class MathmodClient implements ClientModInitializer {
 
                     )
                 )
-                // "arc_length"
+                // The arc length of a circle: "arc_length"
                 .then(ClientCommandManager.literal("arc_length")
                     .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg())
                         .then(ClientCommandManager.argument("radius", FloatArgumentType.floatArg())
@@ -299,7 +307,7 @@ public class MathmodClient implements ClientModInitializer {
                     )
                 )
 
-                // "prime_factors"
+                // Gets the prime factors for a positive integer: "prime_factors"
                 .then(ClientCommandManager.literal("prime_factors")
                     .then(ClientCommandManager.argument("x", IntegerArgumentType.integer(1))
                         .executes(context -> {
@@ -325,7 +333,7 @@ public class MathmodClient implements ClientModInitializer {
 
                     )
                 )
-                // num_divisors
+                // Gets all divisors of a positive integer: "num_divisors"
                 .then(ClientCommandManager.literal("num_divisors")
                     .then(ClientCommandManager.argument("n", IntegerArgumentType.integer(1)) // start at 1 to avoid zero division
                         .executes(context -> {
@@ -341,7 +349,7 @@ public class MathmodClient implements ClientModInitializer {
                         })
                     )
                 )
-                // "binomial"
+                // The number of ways to choose k elements from n: "binomial"
                 .then(ClientCommandManager.literal("binomial")
                     .then(ClientCommandManager.argument("n", IntegerArgumentType.integer(0))
                         .then(ClientCommandManager.argument("k", IntegerArgumentType.integer(0))
