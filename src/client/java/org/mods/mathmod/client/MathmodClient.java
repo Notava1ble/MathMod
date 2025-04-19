@@ -2,6 +2,7 @@ package org.mods.mathmod.client;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
@@ -72,14 +73,17 @@ public class MathmodClient implements ClientModInitializer {
                 )
                 // The "add" sub-command
                 .then(ClientCommandManager.literal("add")
-                    .then(ClientCommandManager.argument("x", IntegerArgumentType.integer())
+                    .then(ClientCommandManager.argument("x", FloatArgumentType.floatArg())
                         .suggests(CommandUtils.suggestPlayerXZ)
-                        .then(ClientCommandManager.argument("y", IntegerArgumentType.integer())
+                        .then(ClientCommandManager.argument("y", FloatArgumentType.floatArg())
                             .suggests(CommandUtils.suggestPlayerXZ)
                             .executes(context -> {
-                              int x = IntegerArgumentType.getInteger(context, "x");
-                              int y = IntegerArgumentType.getInteger(context, "y");
-                              context.getSource().sendFeedback(Text.literal("Result: " + (x + y)));
+                              float x = FloatArgumentType.getFloat(context, "x");
+                              float y = FloatArgumentType.getFloat(context, "y");
+                              DecimalFormat df = new DecimalFormat();
+                              df.setMaximumFractionDigits(config.decimalPrecision);
+                              String out = df.format((x + y));
+                              context.getSource().sendFeedback(Text.literal("Result: " + out));
                               return 1;
                             })
                         )
@@ -87,14 +91,17 @@ public class MathmodClient implements ClientModInitializer {
                 )
                 // The "subtract" sub-command
                 .then(ClientCommandManager.literal("subtract")
-                    .then(ClientCommandManager.argument("x", IntegerArgumentType.integer())
+                    .then(ClientCommandManager.argument("x", FloatArgumentType.floatArg())
                         .suggests(CommandUtils.suggestPlayerXZ)
-                        .then(ClientCommandManager.argument("y", IntegerArgumentType.integer())
+                        .then(ClientCommandManager.argument("y", FloatArgumentType.floatArg())
                             .suggests(CommandUtils.suggestPlayerXZ)
                             .executes(context -> {
-                              int x = IntegerArgumentType.getInteger(context, "x");
-                              int y = IntegerArgumentType.getInteger(context, "y");
-                              context.getSource().sendFeedback(Text.literal("Result: " + (x - y)));
+                              float x = FloatArgumentType.getFloat(context, "x");
+                              float y = FloatArgumentType.getFloat(context, "y");
+                              DecimalFormat df = new DecimalFormat();
+                              df.setMaximumFractionDigits(config.decimalPrecision);
+                              String out = df.format((x - y));
+                              context.getSource().sendFeedback(Text.literal("Result: " + out));
                               return 1;
                             })
                         )
@@ -102,14 +109,17 @@ public class MathmodClient implements ClientModInitializer {
                 )
                 // The "multiply" sub-command
                 .then(ClientCommandManager.literal("multiply")
-                    .then(ClientCommandManager.argument("x", IntegerArgumentType.integer())
+                    .then(ClientCommandManager.argument("x", FloatArgumentType.floatArg())
                         .suggests(CommandUtils.suggestPlayerXZ)
-                        .then(ClientCommandManager.argument("y", IntegerArgumentType.integer())
+                        .then(ClientCommandManager.argument("y", FloatArgumentType.floatArg())
                             .suggests(CommandUtils.suggestPlayerXZ)
                             .executes(context -> {
-                              int x = IntegerArgumentType.getInteger(context, "x");
-                              int y = IntegerArgumentType.getInteger(context, "y");
-                              context.getSource().sendFeedback(Text.literal("Result: " + (x * y)));
+                              float x = FloatArgumentType.getFloat(context, "x");
+                              float y = FloatArgumentType.getFloat(context, "y");
+                              DecimalFormat df = new DecimalFormat();
+                              df.setMaximumFractionDigits(config.decimalPrecision);
+                              String out = df.format((x * y));
+                              context.getSource().sendFeedback(Text.literal("Result: " + out));
                               return 1;
                             })
                         )
@@ -117,17 +127,20 @@ public class MathmodClient implements ClientModInitializer {
                 )
                 // The "divide" sub-command
                 .then(ClientCommandManager.literal("divide")
-                    .then(ClientCommandManager.argument("x", IntegerArgumentType.integer())
+                    .then(ClientCommandManager.argument("x", FloatArgumentType.floatArg())
                         .suggests(CommandUtils.suggestPlayerXZ)
-                        .then(ClientCommandManager.argument("y", IntegerArgumentType.integer())
+                        .then(ClientCommandManager.argument("y", FloatArgumentType.floatArg())
                             .suggests(CommandUtils.suggestPlayerXZ)
                             .executes(context -> {
-                              int x = IntegerArgumentType.getInteger(context, "x");
-                              int y = IntegerArgumentType.getInteger(context, "y");
+                              float x = FloatArgumentType.getFloat(context, "x");
+                              float y = FloatArgumentType.getFloat(context, "y");
                               if (y == 0) {
                                 throw DIVIDE_BY_ZERO.create(); // This shows a red error in chat
                               }
-                              context.getSource().sendFeedback(Text.literal("Result: " + (x / y)));
+                              DecimalFormat df = new DecimalFormat();
+                              df.setMaximumFractionDigits(config.decimalPrecision);
+                              String out = df.format((x / y));
+                              context.getSource().sendFeedback(Text.literal("Result: " + out));
                               return 1;
                             })
                         )
@@ -168,14 +181,30 @@ public class MathmodClient implements ClientModInitializer {
                 // Other less useful math functions:
                 // "abs"
                 .then(ClientCommandManager.literal("abs")
-                    .then(ClientCommandManager.argument("x", IntegerArgumentType.integer())
+                    .then(ClientCommandManager.argument("x", FloatArgumentType.floatArg())
                         .suggests(CommandUtils.suggestPlayerXZ)
                         .executes(context -> {
-                          int x = IntegerArgumentType.getInteger(context, "x");
+                          float x = FloatArgumentType.getFloat(context, "x");
                           context.getSource().sendFeedback(Text.literal("Result: " + Math.abs(x)));
                           return 1;
                         })
 
+                    )
+                )
+                // "arc_length"
+                .then(ClientCommandManager.literal("arc_length")
+                    .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg())
+                        .then(ClientCommandManager.argument("radius", FloatArgumentType.floatArg())
+                            .executes(context -> {
+                              float angle = FloatArgumentType.getFloat(context, "angle");
+                              float radius = FloatArgumentType.getFloat(context, "radius");
+                              DecimalFormat df = new DecimalFormat();
+                              df.setMaximumFractionDigits(config.decimalPrecision);
+                              String out = df.format(2 * Math.PI * radius * (angle / 360));
+                              context.getSource().sendFeedback(Text.literal("Result: " + out));
+                              return 1;
+                            })
+                        )
                     )
                 )
         ));
