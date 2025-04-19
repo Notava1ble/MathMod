@@ -57,7 +57,7 @@ public class MathVariables {
     saveToFile();
   }
 
-  // Save to JSON file
+  // Save variables to JSON file
   public void saveToFile() {
     try (FileWriter writer = new FileWriter(FILE_PATH.toFile())) {
       gson.toJson(variables, writer);
@@ -67,7 +67,7 @@ public class MathVariables {
 
   }
 
-  // Load from JSON file
+  // Load variables from JSON file
   public void loadFromFile() {
     try (FileReader reader = new FileReader(FILE_PATH.toFile())) {
       Type type = new TypeToken<Map<String, String>>() {}.getType();
