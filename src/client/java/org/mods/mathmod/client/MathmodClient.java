@@ -23,11 +23,11 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 public class MathmodClient implements ClientModInitializer {
   // Config Setup
@@ -367,9 +367,136 @@ public class MathmodClient implements ClientModInitializer {
                         )
                     )
                 )
+                // sin
+                .then(ClientCommandManager.literal("sin")
+                    .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg()) // start at 1 to avoid zero division
+                        .executes(context -> {
+                          float angle_x = FloatArgumentType.getFloat(context, "angle");
+                          float x = toRadians(angle_x);
+
+                          DecimalFormat df = new DecimalFormat();
+                          df.setMaximumFractionDigits(config.decimalPrecision);
+                          String out = df.format(Math.sin(x));
+                          String x_out = df.format(angle_x);
+                          context.getSource().sendFeedback(Text.literal("sin(" + x_out + ") = " + out));
+                          return 1;
+                        })
+                    )
+                )
+                // cos
+                .then(ClientCommandManager.literal("cos")
+                    .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg()) // start at 1 to avoid zero division
+                        .executes(context -> {
+                          float angle_x = FloatArgumentType.getFloat(context, "angle");
+                          float x = toRadians(angle_x);
+
+                          DecimalFormat df = new DecimalFormat();
+                          df.setMaximumFractionDigits(config.decimalPrecision);
+                          String out = df.format(Math.cos(x));
+                          String x_out = df.format(angle_x);
+                          context.getSource().sendFeedback(Text.literal("cos(" + x_out + ") = " + out));
+                          return 1;
+                        })
+                    )
+                )
+                // tan
+                .then(ClientCommandManager.literal("tan")
+                    .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg()) // start at 1 to avoid zero division
+                        .executes(context -> {
+                          float angle_x = FloatArgumentType.getFloat(context, "angle");
+                          float x = toRadians(angle_x);
+
+                          DecimalFormat df = new DecimalFormat();
+                          df.setMaximumFractionDigits(config.decimalPrecision);
+                          String out = df.format(Math.tan(x));
+                          String x_out = df.format(angle_x);
+                          context.getSource().sendFeedback(Text.literal("tan(" + x_out + ") = " + out));
+                          return 1;
+                        })
+                    )
+                )
+                // csc
+                .then(ClientCommandManager.literal("csc")
+                    .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg()) // start at 1 to avoid zero division
+                        .executes(context -> {
+                          float angle_x = FloatArgumentType.getFloat(context, "angle");
+                          float x = toRadians(angle_x);
+
+                          DecimalFormat df = new DecimalFormat();
+                          df.setMaximumFractionDigits(config.decimalPrecision);
+                          String out = df.format(1 / Math.sin(x));
+                          String x_out = df.format(angle_x);
+                          context.getSource().sendFeedback(Text.literal("csc(" + x_out + ") = " + out));
+                          return 1;
+                        })
+                    )
+                )
+                // sec
+                .then(ClientCommandManager.literal("sec")
+                    .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg()) // start at 1 to avoid zero division
+                        .executes(context -> {
+                          float angle_x = FloatArgumentType.getFloat(context, "angle");
+                          float x = toRadians(angle_x);
+
+                          DecimalFormat df = new DecimalFormat();
+                          df.setMaximumFractionDigits(config.decimalPrecision);
+                          String out = df.format(1 / Math.cos(x));
+                          String x_out = df.format(angle_x);
+                          context.getSource().sendFeedback(Text.literal("sec(" + x_out + ") = " + out));
+                          return 1;
+                        })
+                    )
+                )
+                // cot
+                .then(ClientCommandManager.literal("cot")
+                    .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg()) // start at 1 to avoid zero division
+                        .executes(context -> {
+                          float angle_x = FloatArgumentType.getFloat(context, "angle");
+                          float x = toRadians(angle_x);
+
+                          DecimalFormat df = new DecimalFormat();
+                          df.setMaximumFractionDigits(config.decimalPrecision);
+                          String out = df.format(1 / Math.tan(x));
+                          String x_out = df.format(angle_x);
+                          context.getSource().sendFeedback(Text.literal("cot(" + x_out + ") = " + out));
+                          return 1;
+                        })
+                    )
+                )
+                // rand
+                .then(ClientCommandManager.literal("rand")
+                    .executes(context -> {
+                      context.getSource().sendFeedback(Text.literal("Rand: " + Math.random()));
+                      return 1;
+                    })
+                )
+                // randInt
+                .then(ClientCommandManager.literal("randInt")
+                    .then(ClientCommandManager.argument("x", IntegerArgumentType.integer())
+                        .then(ClientCommandManager.argument("y", IntegerArgumentType.integer())
+                            .executes(context -> {
+                              int x = IntegerArgumentType.getInteger(context, "x");
+                              int y = IntegerArgumentType.getInteger(context, "y");
+
+                              if (x == y) {
+                                context.getSource().sendFeedback(Text.literal(String.valueOf(x)));
+                              } else {
+                                Random rand = new Random();
+                                int randInt = rand.nextInt(y-x+1)+x;
+                                context.getSource().sendFeedback(Text.literal(String.valueOf(randInt)));
+                              }
+                              return 1;
+                            })
+                        )
+                    )
+                )
 
 
         ));
+  }
+
+  private static float toRadians(float degrees) {
+    return (float) Math.toRadians(degrees);
   }
 
   private ModConfig loadConfig() {
