@@ -25,14 +25,17 @@ import org.slf4j.LoggerFactory;
 
 
 public class MathmodClient implements ClientModInitializer {
+  // Config Setup
   private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
   private static final Path CONFIG_PATH =
       FabricLoader.getInstance().getConfigDir().resolve("mathmodConfing.json");
 
   private static ModConfig config;
 
+  // Logger Setup
   public static final Logger LOGGER = LoggerFactory.getLogger("MyModName");
 
+  // Errors
   private static final SimpleCommandExceptionType DIVIDE_BY_ZERO =
       new SimpleCommandExceptionType(Text.literal("Cannot divide by zero."));
   private static final SimpleCommandExceptionType INVALID_EXPR =
@@ -41,11 +44,14 @@ public class MathmodClient implements ClientModInitializer {
 
   @Override
   public void onInitializeClient() {
+    // Load Config
     config = loadConfig();
 
     ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
       dispatcher.register(
+          // Implements the "math" command
           ClientCommandManager.literal("math")
+              // The "config" sub-command
               .then(ClientCommandManager.literal("config")
                   .then(ClientCommandManager.literal("precision")
                       .then(ClientCommandManager.argument("value", IntegerArgumentType.integer(0))
@@ -64,6 +70,7 @@ public class MathmodClient implements ClientModInitializer {
                       )
                   )
               )
+              // The "add" sub-command
               .then(ClientCommandManager.literal("add")
                   .then(ClientCommandManager.argument("x", IntegerArgumentType.integer())
                       .suggests(CommandUtils.suggestPlayerXZ)
@@ -78,6 +85,7 @@ public class MathmodClient implements ClientModInitializer {
                       )
                   )
               )
+              // The "subtract" sub-command
               .then(ClientCommandManager.literal("subtract")
                   .then(ClientCommandManager.argument("x", IntegerArgumentType.integer())
                       .suggests(CommandUtils.suggestPlayerXZ)
@@ -92,6 +100,7 @@ public class MathmodClient implements ClientModInitializer {
                       )
                   )
               )
+              // The "multiply" sub-command
               .then(ClientCommandManager.literal("multiply")
                   .then(ClientCommandManager.argument("x", IntegerArgumentType.integer())
                       .suggests(CommandUtils.suggestPlayerXZ)
@@ -106,6 +115,7 @@ public class MathmodClient implements ClientModInitializer {
                       )
                   )
               )
+              // The "divide" sub-command
               .then(ClientCommandManager.literal("divide")
                   .then(ClientCommandManager.argument("x", IntegerArgumentType.integer())
                       .suggests(CommandUtils.suggestPlayerXZ)
@@ -123,6 +133,7 @@ public class MathmodClient implements ClientModInitializer {
                       )
                   )
               )
+              // The "eval" sub-command
               .then(ClientCommandManager.literal("eval")
                   .then(ClientCommandManager.argument("expression", StringArgumentType.greedyString())
                       .executes(context -> {
@@ -158,6 +169,7 @@ public class MathmodClient implements ClientModInitializer {
     });
   }
   private ModConfig loadConfig() {
+    // Method to load config from file
     try {
       if (Files.exists(CONFIG_PATH)) {
         return GSON.fromJson(Files.newBufferedReader(CONFIG_PATH), ModConfig.class);
@@ -173,6 +185,7 @@ public class MathmodClient implements ClientModInitializer {
   }
 
   private void saveConfig() {
+    // Method to save config to file
     try {
       Files.writeString(CONFIG_PATH, GSON.toJson(config));
     } catch (IOException e) {
