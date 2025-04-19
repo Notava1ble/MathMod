@@ -3,7 +3,7 @@
   "id": "mathmod",
   "version": "${version}",
   "name": "MathMod",
-  "description": "A mod to add basic math functions in chat",
+  "description": "An easy mod that allows you to do basic math in the chat.",
   "authors": [
     "Visar Mullaj"
   ],
