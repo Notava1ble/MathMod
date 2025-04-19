@@ -69,7 +69,7 @@ public class MathmodClient implements ClientModInitializer {
                               config.decimalPrecision = v;
                               saveConfig();
                               ctx.getSource().sendFeedback(
-                                  Text.literal("Decimal precision set to " + v)
+                                  Text.literal("Set Decimal precision to " + v)
                               );
                               return 1;
                             })
