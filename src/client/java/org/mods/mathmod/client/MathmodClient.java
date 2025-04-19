@@ -253,6 +253,36 @@ public class MathmodClient implements ClientModInitializer {
                         })
                     )
                 )
+                // "binomial"
+                .then(ClientCommandManager.literal("binomial")
+                    .then(ClientCommandManager.argument("n", IntegerArgumentType.integer(0))
+                        .then(ClientCommandManager.argument("k", IntegerArgumentType.integer(0))
+                            .executes(context -> {
+                              int n = IntegerArgumentType.getInteger(context, "n");
+                              int k = IntegerArgumentType.getInteger(context, "k");
+
+                              if (k > n) {
+                                context.getSource().sendError(Text.literal("Error: k cannot be greater than n."));
+                                return 0;
+                              }
+
+                              if (k > n - k) {
+                                k = n - k; // take advantage of symmetry
+                              }
+
+                              long result = 1;
+                              for (int i = 1; i <= k; i++) {
+                                result *= (n - i + 1);
+                                result /= i;
+                              }
+
+                              context.getSource().sendFeedback(Text.literal("Binomial coefficient (" + n + " choose " + k + "): " + result));
+                              return 1;
+                            })
+                        )
+                    )
+                )
+
 
         ));
   }
