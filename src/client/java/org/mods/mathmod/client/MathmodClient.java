@@ -20,6 +20,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class MathmodClient implements ClientModInitializer {
   private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -27,6 +30,8 @@ public class MathmodClient implements ClientModInitializer {
       FabricLoader.getInstance().getConfigDir().resolve("mathmodConfing.json");
 
   private static ModConfig config;
+
+  public static final Logger LOGGER = LoggerFactory.getLogger("MyModName");
 
   private static final SimpleCommandExceptionType DIVIDE_BY_ZERO =
       new SimpleCommandExceptionType(Text.literal("Cannot divide by zero."));
@@ -162,7 +167,7 @@ public class MathmodClient implements ClientModInitializer {
         return cfg;
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      LOGGER.error("Error reading config file: {}", CONFIG_PATH, e);
       return new ModConfig(); // fallback
     }
   }
@@ -171,7 +176,7 @@ public class MathmodClient implements ClientModInitializer {
     try {
       Files.writeString(CONFIG_PATH, GSON.toJson(config));
     } catch (IOException e) {
-      e.printStackTrace();
+      LOGGER.error("Error writing config file", e);
     }
   }
 
