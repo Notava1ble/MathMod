@@ -369,7 +369,7 @@ public class MathmodClient implements ClientModInitializer {
                 )
                 // sin
                 .then(ClientCommandManager.literal("sin")
-                    .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg()) // start at 1 to avoid zero division
+                    .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg())
                         .executes(context -> {
                           float angle_x = FloatArgumentType.getFloat(context, "angle");
                           float x = toRadians(angle_x);
@@ -385,7 +385,7 @@ public class MathmodClient implements ClientModInitializer {
                 )
                 // cos
                 .then(ClientCommandManager.literal("cos")
-                    .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg()) // start at 1 to avoid zero division
+                    .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg())
                         .executes(context -> {
                           float angle_x = FloatArgumentType.getFloat(context, "angle");
                           float x = toRadians(angle_x);
@@ -401,7 +401,7 @@ public class MathmodClient implements ClientModInitializer {
                 )
                 // tan
                 .then(ClientCommandManager.literal("tan")
-                    .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg()) // start at 1 to avoid zero division
+                    .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg())
                         .executes(context -> {
                           float angle_x = FloatArgumentType.getFloat(context, "angle");
                           float x = toRadians(angle_x);
@@ -417,7 +417,7 @@ public class MathmodClient implements ClientModInitializer {
                 )
                 // csc
                 .then(ClientCommandManager.literal("csc")
-                    .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg()) // start at 1 to avoid zero division
+                    .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg())
                         .executes(context -> {
                           float angle_x = FloatArgumentType.getFloat(context, "angle");
                           float x = toRadians(angle_x);
@@ -433,7 +433,7 @@ public class MathmodClient implements ClientModInitializer {
                 )
                 // sec
                 .then(ClientCommandManager.literal("sec")
-                    .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg()) // start at 1 to avoid zero division
+                    .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg())
                         .executes(context -> {
                           float angle_x = FloatArgumentType.getFloat(context, "angle");
                           float x = toRadians(angle_x);
@@ -449,7 +449,7 @@ public class MathmodClient implements ClientModInitializer {
                 )
                 // cot
                 .then(ClientCommandManager.literal("cot")
-                    .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg()) // start at 1 to avoid zero division
+                    .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg())
                         .executes(context -> {
                           float angle_x = FloatArgumentType.getFloat(context, "angle");
                           float x = toRadians(angle_x);
@@ -459,6 +459,38 @@ public class MathmodClient implements ClientModInitializer {
                           String out = df.format(1 / Math.tan(x));
                           String x_out = df.format(angle_x);
                           context.getSource().sendFeedback(Text.literal("cot(" + x_out + ") = " + out));
+                          return 1;
+                        })
+                    )
+                )
+                // sinh
+                .then(ClientCommandManager.literal("sinh")
+                    .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg())
+                        .executes(context -> {
+                          float angle_x = FloatArgumentType.getFloat(context, "angle");
+                          float x = toRadians(angle_x);
+
+                          DecimalFormat df = new DecimalFormat();
+                          df.setMaximumFractionDigits(config.decimalPrecision);
+                          String out = df.format(Math.sinh(x));
+                          String x_out = df.format(angle_x);
+                          context.getSource().sendFeedback(Text.literal("sinh(" + x_out + ") = " + out));
+                          return 1;
+                        })
+                    )
+                )
+                // cosh
+                .then(ClientCommandManager.literal("cosh")
+                    .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg())
+                        .executes(context -> {
+                          float angle_x = FloatArgumentType.getFloat(context, "angle");
+                          float x = toRadians(angle_x);
+
+                          DecimalFormat df = new DecimalFormat();
+                          df.setMaximumFractionDigits(config.decimalPrecision);
+                          String out = df.format(Math.cosh(x));
+                          String x_out = df.format(angle_x);
+                          context.getSource().sendFeedback(Text.literal("cosh(" + x_out + ") = " + out));
                           return 1;
                         })
                     )
