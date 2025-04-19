@@ -77,13 +77,30 @@ public class MathmodClient implements ClientModInitializer {
                 )
                 // The variable sub-command
                 .then(ClientCommandManager.literal("variable")
-                    .then(ClientCommandManager.argument("name", StringArgumentType.string())
-                        .then(ClientCommandManager.argument("value", FloatArgumentType.floatArg())
-                            .executes(context -> {
-                              String name = StringArgumentType.getString(context,"name");
-                              float value = FloatArgumentType.getFloat(context,"value");
+                    .then(ClientCommandManager.literal("set")
+                        .then(ClientCommandManager.argument("name", StringArgumentType.string())
+                            .then(ClientCommandManager.argument("value", FloatArgumentType.floatArg())
+                                .executes(context -> {
+                                  String name = StringArgumentType.getString(context, "name");
+                                  float value = FloatArgumentType.getFloat(context, "value");
 
-                              variables.setVariable(name, value);
+                                  variables.setVariable(name, value);
+                                  context.getSource().sendFeedback(Text.literal("Added variable \"" + name + "\" with value \"" + value + "\""));
+                                  return 1;
+                                })
+                            )
+                        )
+                    )
+                    .then(ClientCommandManager.literal("get")
+                        .then(ClientCommandManager.argument("name", StringArgumentType.string())
+                            .executes(context -> {
+                              String name = StringArgumentType.getString(context, "name");
+                              if (variables.hasVariable(name)) {
+                                float value = variables.getVariable(name);
+                                context.getSource().sendFeedback(Text.literal(String.valueOf(value)));
+                              } else {
+                                throw new SimpleCommandExceptionType(Text.literal("The variable \"" + name + "\" does not exist")).create();
+                              }
                               return 1;
                             })
                         )
