@@ -391,19 +391,19 @@ public class MathmodClient implements ClientModInitializer {
                 // csc
                 .then(ClientCommandManager.literal("csc")
                     .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg())
-                        .executes(context -> trigOutline(context, "csc", (Double value) -> 1/Math.sin(value)))
+                        .executes(context -> trigOutline(context, "csc", (Double value) -> 1 / Math.sin(value)))
                     )
                 )
                 // sec
                 .then(ClientCommandManager.literal("sec")
                     .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg())
-                        .executes(context -> trigOutline(context, "sec", (Double value) -> 1/Math.cos(value)))
+                        .executes(context -> trigOutline(context, "sec", (Double value) -> 1 / Math.cos(value)))
                     )
                 )
                 // cot
                 .then(ClientCommandManager.literal("cot")
                     .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg())
-                        .executes(context -> trigOutline(context, "cot", (Double value) -> 1/Math.tan(value)))
+                        .executes(context -> trigOutline(context, "cot", (Double value) -> 1 / Math.tan(value)))
                     )
                 )
                 // sinh
@@ -416,6 +416,30 @@ public class MathmodClient implements ClientModInitializer {
                 .then(ClientCommandManager.literal("cosh")
                     .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg())
                         .executes(context -> trigOutline(context, "cosh", Math::cosh))
+                    )
+                )
+                // tanh
+                .then(ClientCommandManager.literal("tanh")
+                    .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg())
+                        .executes(context -> trigOutline(context, "tanh", Math::tanh))
+                    )
+                )
+                // asin
+                .then(ClientCommandManager.literal("asin")
+                    .then(ClientCommandManager.argument("length", FloatArgumentType.floatArg())
+                        .executes(context -> inverseTrigOutline(context, "asin", Math::asin))
+                    )
+                )
+                // acos
+                .then(ClientCommandManager.literal("acos")
+                    .then(ClientCommandManager.argument("length", FloatArgumentType.floatArg())
+                        .executes(context -> inverseTrigOutline(context, "acos", Math::acos))
+                    )
+                )
+                // atan
+                .then(ClientCommandManager.literal("atan")
+                    .then(ClientCommandManager.argument("length", FloatArgumentType.floatArg())
+                        .executes(context -> inverseTrigOutline(context, "atan", Math::atan))
                     )
                 )
                 // rand
@@ -437,7 +461,7 @@ public class MathmodClient implements ClientModInitializer {
                                 context.getSource().sendFeedback(Text.literal(String.valueOf(x)));
                               } else {
                                 Random rand = new Random();
-                                int randInt = rand.nextInt(y-x+1)+x;
+                                int randInt = rand.nextInt(y - x + 1) + x;
                                 context.getSource().sendFeedback(Text.literal(String.valueOf(randInt)));
                               }
                               return 1;
@@ -450,20 +474,34 @@ public class MathmodClient implements ClientModInitializer {
         ));
   }
 
-   static int trigOutline(CommandContext<FabricClientCommandSource> context, String name, Function<Double, Double> function) {
-      float angle_x = FloatArgumentType.getFloat(context, "angle");
-      float x = toRadians(angle_x);
+  static int trigOutline(CommandContext<FabricClientCommandSource> context, String name, Function<Double, Double> function) {
+    float angle_x = FloatArgumentType.getFloat(context, "angle");
+    float x = toRadians(angle_x);
 
-      DecimalFormat df = new DecimalFormat();
-      df.setMaximumFractionDigits(config.decimalPrecision);
-      String out = df.format(function.apply((double) x));
-      String x_out = df.format(angle_x);
-      context.getSource().sendFeedback(Text.literal(name + "(" + x_out + ") = " + out));
-      return 1;
+    DecimalFormat df = new DecimalFormat();
+    df.setMaximumFractionDigits(config.decimalPrecision);
+    String out = df.format(function.apply((double) x));
+    String x_out = df.format(angle_x);
+    context.getSource().sendFeedback(Text.literal(name + "(" + x_out + ") = " + out));
+    return 1;
+  }
+
+  static int inverseTrigOutline(CommandContext<FabricClientCommandSource> context, String name, Function<Double, Double> function) {
+    float x = FloatArgumentType.getFloat(context, "length");
+
+    DecimalFormat df = new DecimalFormat();
+    df.setMaximumFractionDigits(config.decimalPrecision);
+    String out = df.format(toDegrees(function.apply((double) x)));
+    String x_out = df.format(x);
+    context.getSource().sendFeedback(Text.literal(name + "(" + x_out + ") = " + out));
+    return 1;
   }
 
   private static float toRadians(float degrees) {
     return (float) Math.toRadians(degrees);
+  }
+  private static double toDegrees(double radians) {
+    return Math.toDegrees(radians);
   }
 
   private ModConfig loadConfig() {
