@@ -33,7 +33,7 @@ public class MathmodClient implements ClientModInitializer {
   // Config Setup
   private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
   private static final Path CONFIG_PATH =
-      FabricLoader.getInstance().getConfigDir().resolve("mathmodConfing.json");
+      FabricLoader.getInstance().getConfigDir().resolve("mathConfig.json");
 
   private static ModConfig config;
 

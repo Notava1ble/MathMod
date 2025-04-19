@@ -1,6 +1,6 @@
 package org.mods.mathmod.client;
 
 public class ModConfig {
-  /** how many fractional digits to show */
+  /** This controls the precision of the numbers after the decimal point.*/
   public int decimalPrecision = 2;
 }
