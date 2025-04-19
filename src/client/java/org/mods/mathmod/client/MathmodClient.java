@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -207,6 +210,50 @@ public class MathmodClient implements ClientModInitializer {
                         )
                     )
                 )
+
+                // "prime_factors"
+                .then(ClientCommandManager.literal("prime_factors")
+                    .then(ClientCommandManager.argument("x", IntegerArgumentType.integer(1))
+                        .executes(context -> {
+                          int x = IntegerArgumentType.getInteger(context, "x");
+                          List<Integer> factors = new ArrayList<>();
+                          for (int i = 2; i * i <= x; i++) {
+                            while (x % i == 0) {
+                              factors.add(i);
+                              x /= i;
+                            }
+                          }
+                          if (x > 1) {
+                            factors.add(x);
+                          }
+
+                          context.getSource().sendFeedback(Text.literal(
+                              "Result: " + factors.stream()
+                              .map(String::valueOf)
+                              .collect(Collectors.joining(", "))
+                          ));
+                          return 1;
+                        })
+
+                    )
+                )
+                // num_divisors
+                .then(ClientCommandManager.literal("num_divisors")
+                    .then(ClientCommandManager.argument("n", IntegerArgumentType.integer(1)) // start at 1 to avoid zero division
+                        .executes(context -> {
+                          int n = IntegerArgumentType.getInteger(context, "n");
+                          int count = 0;
+                          for (int i = 1; i * i <= n; i++) {
+                            if (n % i == 0) {
+                              count += (i * i == n) ? 1 : 2; // perfect square case
+                            }
+                          }
+                          context.getSource().sendFeedback(Text.literal("Result: " + count));
+                          return 1;
+                        })
+                    )
+                )
+
         ));
   }
 
