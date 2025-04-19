@@ -4,9 +4,11 @@
   "version": "${version}",
   "name": "MathMod",
   "description": "A mod to add basic math functions in chat",
-  "authors": [],
+  "authors": [
+    "Visar Mullaj"
+  ],
   "contact": {},
-  "license": "All-Rights-Reserved",
+  "license": "Mit",
   "icon": "assets/mathmod/icon.png",
   "environment": "*",
   "entrypoints": {
