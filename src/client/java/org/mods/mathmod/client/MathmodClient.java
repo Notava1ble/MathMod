@@ -13,7 +13,6 @@ import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
 
-
 public class MathmodClient implements ClientModInitializer {
   private static final SimpleCommandExceptionType DIVIDE_BY_ZERO =
       new SimpleCommandExceptionType(Text.literal("Cannot divide by zero."));
@@ -91,7 +90,13 @@ public class MathmodClient implements ClientModInitializer {
                         String expr = StringArgumentType.getString(context, "expression");
                         try {
                           // Parse & evaluate
-                          Expression e = new ExpressionBuilder(expr).build();
+                          Expression e = new ExpressionBuilder(expr)
+                              .variables("pi", "e")
+                              .build()
+                              // Bind them to their Math constants
+                              .setVariable("pi", Math.PI)
+                              .setVariable("e", Math.E);
+
                           double result = e.evaluate();
                           // Send result (trim .0 for integers)
                           String out = (result == (long) result)
