@@ -26,3 +26,14 @@ For now, the mod only supports the 4 basic operations.
 ```commands
 /math divide 10 5
 ```
+
+- Expression Evaluation
+```commands
+/math eval log(e) + 2pi -sin(3*(pi/2))
+```
+
+
+## Features
+The features on this mod are:
+- Support for "e" and "pi" constants.
+- Player coordinate auto suggestions
