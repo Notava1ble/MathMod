@@ -35,5 +35,6 @@ For now, the mod only supports the 4 basic operations.
 
 ## Features
 The features on this mod are:
-- Support for "e" and "pi" constants.
+- Support for "e" and "pi" constants
 - Player coordinate auto suggestions
+- Editable configs for decimal precision
