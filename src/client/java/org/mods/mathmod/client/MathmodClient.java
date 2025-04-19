@@ -112,6 +112,34 @@ public class MathmodClient implements ClientModInitializer {
                             })
                         )
                     )
+                    .then(ClientCommandManager.literal("delete")
+                        .then(ClientCommandManager.argument("name", StringArgumentType.string())
+                            .suggests((context, builder) -> {
+                              for (Map.Entry<String, Float> entry : variables.getAllVariables()) {
+                                builder.suggest(entry.getKey());
+                              }
+                              return builder.buildFuture();
+                            })
+                            .executes(context -> {
+                              String name = StringArgumentType.getString(context, "name");
+                              if (variables.hasVariable(name)) {
+                                variables.removeVariable(name);
+                                context.getSource().sendFeedback(Text.literal("Removed the variable \"" + name + "\""));
+                              } else {
+                                throw new SimpleCommandExceptionType(Text.literal("The variable \"" + name + "\" does not exist")).create();
+                              }
+                              return 1;
+                            })
+                        )
+                    )
+                    .then(ClientCommandManager.literal("list")
+                        .executes(context -> {
+                          for (Map.Entry<String, Float> entry : variables.getAllVariables()) {
+                            context.getSource().sendFeedback(Text.literal(entry.getKey() + ": " + entry.getValue()));
+                          }
+                          return 1;
+                        })
+                    )
                 )
                 // The "add" sub-command
                 .then(ClientCommandManager.literal("add")
