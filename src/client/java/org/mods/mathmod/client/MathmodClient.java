@@ -46,6 +46,9 @@ public class MathmodClient implements ClientModInitializer {
                       .then(ClientCommandManager.argument("value", IntegerArgumentType.integer(0))
                           .executes(ctx -> {
                             int v = IntegerArgumentType.getInteger(ctx, "value");
+                            if (v > 15) {
+                              v=15;
+                            }
                             config.decimalPrecision = v;
                             saveConfig();
                             ctx.getSource().sendFeedback(
