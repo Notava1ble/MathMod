@@ -1,5 +1,6 @@
 package org.mods.mathmod.client;
 
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.fabricmc.api.ClientModInitializer;
 
@@ -16,23 +17,23 @@ public class MathmodClient implements ClientModInitializer {
   public void onInitializeClient() {
     ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
       dispatcher.register(
-              ClientCommandManager.literal("clienttater")
-                      .then(ClientCommandManager.literal("greet")
-                              .then(ClientCommandManager.argument("name", StringArgumentType.word())
-                                      .suggests((context, builder) -> {
-                                        builder.suggest("Steve");
-                                        builder.suggest("Alex");
-                                        return builder.buildFuture();
-                                      })
-                                      .executes(context -> {
-                                        String name = StringArgumentType.getString(context, "name");
-                                        context.getSource().sendFeedback(Text.literal("Hello, " + name + "!"));
-                                        return 1;
-                                      })
-                              )
+          ClientCommandManager.literal("math")
+              .then(ClientCommandManager.literal("add")
+                  .then(ClientCommandManager.argument("x", IntegerArgumentType.integer())
+                      .then(ClientCommandManager.argument("y", IntegerArgumentType.integer())
+                          .executes(context -> {
+                            int x = IntegerArgumentType.getInteger(context, "x");
+                            int y = IntegerArgumentType.getInteger(context, "y");
+                            context.getSource().sendFeedback(Text.literal("Result: " + (x + y)));
+                            return 1;
+                          })
                       )
+                  )
+              )
+
       );
     });
   }
+
 
 }
