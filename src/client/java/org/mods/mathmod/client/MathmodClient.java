@@ -86,7 +86,9 @@ public class MathmodClient implements ClientModInitializer {
                               DecimalFormat df = new DecimalFormat();
                               df.setMaximumFractionDigits(config.decimalPrecision);
                               String out = df.format((x + y));
-                              context.getSource().sendFeedback(Text.literal("Result: " + out));
+                              String x_out = df.format(x);
+                              String y_out = df.format(y);
+                              context.getSource().sendFeedback(Text.literal(x_out + " + " + y_out + " = " + out));
                               return 1;
                             })
                         )
@@ -104,7 +106,9 @@ public class MathmodClient implements ClientModInitializer {
                               DecimalFormat df = new DecimalFormat();
                               df.setMaximumFractionDigits(config.decimalPrecision);
                               String out = df.format((x - y));
-                              context.getSource().sendFeedback(Text.literal("Result: " + out));
+                              String x_out = df.format(x);
+                              String y_out = df.format(y);
+                              context.getSource().sendFeedback(Text.literal(x_out + " - " + y_out + " = " + out));
                               return 1;
                             })
                         )
@@ -122,7 +126,9 @@ public class MathmodClient implements ClientModInitializer {
                               DecimalFormat df = new DecimalFormat();
                               df.setMaximumFractionDigits(config.decimalPrecision);
                               String out = df.format((x * y));
-                              context.getSource().sendFeedback(Text.literal("Result: " + out));
+                              String x_out = df.format(x);
+                              String y_out = df.format(y);
+                              context.getSource().sendFeedback(Text.literal(x_out + " * " + y_out + " = " + out));
                               return 1;
                             })
                         )
@@ -143,7 +149,9 @@ public class MathmodClient implements ClientModInitializer {
                               DecimalFormat df = new DecimalFormat();
                               df.setMaximumFractionDigits(config.decimalPrecision);
                               String out = df.format((x / y));
-                              context.getSource().sendFeedback(Text.literal("Result: " + out));
+                              String x_out = df.format(x);
+                              String y_out = df.format(y);
+                              context.getSource().sendFeedback(Text.literal(x_out + " / " + y_out + " = " + out));
                               return 1;
                             })
                         )
@@ -188,7 +196,11 @@ public class MathmodClient implements ClientModInitializer {
                         .suggests(CommandUtils.suggestPlayerXZ)
                         .executes(context -> {
                           float x = FloatArgumentType.getFloat(context, "x");
-                          context.getSource().sendFeedback(Text.literal("Result: " + Math.abs(x)));
+                          DecimalFormat df = new DecimalFormat();
+                          df.setMaximumFractionDigits(config.decimalPrecision);
+                          String out = df.format(Math.abs(x));
+                          String x_out = df.format(x);
+                          context.getSource().sendFeedback(Text.literal("abs(" + x_out + ")" + " = " + out));
                           return 1;
                         })
 
@@ -204,7 +216,9 @@ public class MathmodClient implements ClientModInitializer {
                               DecimalFormat df = new DecimalFormat();
                               df.setMaximumFractionDigits(config.decimalPrecision);
                               String out = df.format(2 * Math.PI * radius * (angle / 360));
-                              context.getSource().sendFeedback(Text.literal("Result: " + out));
+                              String angle_out = df.format(angle);
+                              String radius_out = df.format(radius);
+                              context.getSource().sendFeedback(Text.literal("arc_length(" + angle_out + ", " + radius_out + ") = " + out));
                               return 1;
                             })
                         )
@@ -228,7 +242,7 @@ public class MathmodClient implements ClientModInitializer {
                           }
 
                           context.getSource().sendFeedback(Text.literal(
-                              "Result: " + factors.stream()
+                              "prime_factors(" + x + ") = " + factors.stream()
                               .map(String::valueOf)
                               .collect(Collectors.joining(", "))
                           ));
@@ -248,7 +262,7 @@ public class MathmodClient implements ClientModInitializer {
                               count += (i * i == n) ? 1 : 2; // perfect square case
                             }
                           }
-                          context.getSource().sendFeedback(Text.literal("Result: " + count));
+                          context.getSource().sendFeedback(Text.literal("num_divisors(" + n + ") = " + count));
                           return 1;
                         })
                     )
@@ -276,7 +290,7 @@ public class MathmodClient implements ClientModInitializer {
                                 result /= i;
                               }
 
-                              context.getSource().sendFeedback(Text.literal("Binomial coefficient (" + n + " choose " + k + "): " + result));
+                              context.getSource().sendFeedback(Text.literal("Binomial coefficient (" + n + " choose " + k + ") = " + result));
                               return 1;
                             })
                         )
