@@ -5,7 +5,7 @@ in the command line.
 
 ## Usage
 
-For now, the mod only supports the 4 basic operations.
+These are some operations possible with the mod.
 
 - Addition
 ```commands
@@ -38,3 +38,4 @@ The features on this mod are:
 - Support for "e" and "pi" constants
 - Player coordinate auto suggestions
 - Editable configs for decimal precision
+- Multiple useful functions, such as "abs", "prime_factors" or "binomial"
