@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -93,6 +94,12 @@ public class MathmodClient implements ClientModInitializer {
                     )
                     .then(ClientCommandManager.literal("get")
                         .then(ClientCommandManager.argument("name", StringArgumentType.string())
+                            .suggests((context, builder) -> {
+                              for (Map.Entry<String, Float> entry : variables.getAllVariables()) {
+                                builder.suggest(entry.getKey());
+                              }
+                              return builder.buildFuture();
+                            })
                             .executes(context -> {
                               String name = StringArgumentType.getString(context, "name");
                               if (variables.hasVariable(name)) {

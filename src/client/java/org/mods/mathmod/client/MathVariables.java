@@ -1,10 +1,16 @@
 package org.mods.mathmod.client;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MathVariables {
   private Map<String, Float> variables;
+
+  public List<Map.Entry<String, Float>> getAllVariables() {
+    return new ArrayList<>(variables.entrySet());
+  }
 
   public MathVariables() {
     variables = new HashMap<>();
