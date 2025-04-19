@@ -442,6 +442,33 @@ public class MathmodClient implements ClientModInitializer {
                         .executes(context -> inverseTrigOutline(context, "atan", Math::atan))
                     )
                 )
+                // ln
+                .then(ClientCommandManager.literal("ln")
+                    .then(ClientCommandManager.argument("x", FloatArgumentType.floatArg())
+                        .executes(context -> {
+                          float x = FloatArgumentType.getFloat(context, "x");
+                          DecimalFormat df = new DecimalFormat();
+                          df.setMaximumFractionDigits(config.decimalPrecision);
+                          String out = df.format(Math.log(x));
+                          String x_out = df.format(x);
+                          context.getSource().sendFeedback(Text.literal("ln(" + x_out + ") = " + out));
+                          return 1;
+                        })
+                    )
+                )// log10
+                .then(ClientCommandManager.literal("log10")
+                    .then(ClientCommandManager.argument("x", FloatArgumentType.floatArg())
+                        .executes(context -> {
+                          float x = FloatArgumentType.getFloat(context, "x");
+                          DecimalFormat df = new DecimalFormat();
+                          df.setMaximumFractionDigits(config.decimalPrecision);
+                          String out = df.format(Math.log10(x));
+                          String x_out = df.format(x);
+                          context.getSource().sendFeedback(Text.literal("log10(" + x_out + ") = " + out));
+                          return 1;
+                        })
+                    )
+                )
                 // rand
                 .then(ClientCommandManager.literal("rand")
                     .executes(context -> {
@@ -500,6 +527,7 @@ public class MathmodClient implements ClientModInitializer {
   private static float toRadians(float degrees) {
     return (float) Math.toRadians(degrees);
   }
+
   private static double toDegrees(double radians) {
     return Math.toDegrees(radians);
   }
