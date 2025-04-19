@@ -5,11 +5,13 @@ import com.google.gson.GsonBuilder;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.fabricmc.api.ClientModInitializer;
 
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.text.Text;
 
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -370,129 +373,49 @@ public class MathmodClient implements ClientModInitializer {
                 // sin
                 .then(ClientCommandManager.literal("sin")
                     .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg())
-                        .executes(context -> {
-                          float angle_x = FloatArgumentType.getFloat(context, "angle");
-                          float x = toRadians(angle_x);
-
-                          DecimalFormat df = new DecimalFormat();
-                          df.setMaximumFractionDigits(config.decimalPrecision);
-                          String out = df.format(Math.sin(x));
-                          String x_out = df.format(angle_x);
-                          context.getSource().sendFeedback(Text.literal("sin(" + x_out + ") = " + out));
-                          return 1;
-                        })
+                        .executes(context -> trigOutline(context, "sin", Math::sin))
                     )
                 )
                 // cos
                 .then(ClientCommandManager.literal("cos")
                     .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg())
-                        .executes(context -> {
-                          float angle_x = FloatArgumentType.getFloat(context, "angle");
-                          float x = toRadians(angle_x);
-
-                          DecimalFormat df = new DecimalFormat();
-                          df.setMaximumFractionDigits(config.decimalPrecision);
-                          String out = df.format(Math.cos(x));
-                          String x_out = df.format(angle_x);
-                          context.getSource().sendFeedback(Text.literal("cos(" + x_out + ") = " + out));
-                          return 1;
-                        })
+                        .executes(context -> trigOutline(context, "cos", Math::cos))
                     )
                 )
                 // tan
                 .then(ClientCommandManager.literal("tan")
                     .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg())
-                        .executes(context -> {
-                          float angle_x = FloatArgumentType.getFloat(context, "angle");
-                          float x = toRadians(angle_x);
-
-                          DecimalFormat df = new DecimalFormat();
-                          df.setMaximumFractionDigits(config.decimalPrecision);
-                          String out = df.format(Math.tan(x));
-                          String x_out = df.format(angle_x);
-                          context.getSource().sendFeedback(Text.literal("tan(" + x_out + ") = " + out));
-                          return 1;
-                        })
+                        .executes(context -> trigOutline(context, "tan", Math::tan))
                     )
                 )
                 // csc
                 .then(ClientCommandManager.literal("csc")
                     .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg())
-                        .executes(context -> {
-                          float angle_x = FloatArgumentType.getFloat(context, "angle");
-                          float x = toRadians(angle_x);
-
-                          DecimalFormat df = new DecimalFormat();
-                          df.setMaximumFractionDigits(config.decimalPrecision);
-                          String out = df.format(1 / Math.sin(x));
-                          String x_out = df.format(angle_x);
-                          context.getSource().sendFeedback(Text.literal("csc(" + x_out + ") = " + out));
-                          return 1;
-                        })
+                        .executes(context -> trigOutline(context, "csc", (Double value) -> 1/Math.sin(value)))
                     )
                 )
                 // sec
                 .then(ClientCommandManager.literal("sec")
                     .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg())
-                        .executes(context -> {
-                          float angle_x = FloatArgumentType.getFloat(context, "angle");
-                          float x = toRadians(angle_x);
-
-                          DecimalFormat df = new DecimalFormat();
-                          df.setMaximumFractionDigits(config.decimalPrecision);
-                          String out = df.format(1 / Math.cos(x));
-                          String x_out = df.format(angle_x);
-                          context.getSource().sendFeedback(Text.literal("sec(" + x_out + ") = " + out));
-                          return 1;
-                        })
+                        .executes(context -> trigOutline(context, "sec", (Double value) -> 1/Math.cos(value)))
                     )
                 )
                 // cot
                 .then(ClientCommandManager.literal("cot")
                     .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg())
-                        .executes(context -> {
-                          float angle_x = FloatArgumentType.getFloat(context, "angle");
-                          float x = toRadians(angle_x);
-
-                          DecimalFormat df = new DecimalFormat();
-                          df.setMaximumFractionDigits(config.decimalPrecision);
-                          String out = df.format(1 / Math.tan(x));
-                          String x_out = df.format(angle_x);
-                          context.getSource().sendFeedback(Text.literal("cot(" + x_out + ") = " + out));
-                          return 1;
-                        })
+                        .executes(context -> trigOutline(context, "cot", (Double value) -> 1/Math.tan(value)))
                     )
                 )
                 // sinh
                 .then(ClientCommandManager.literal("sinh")
                     .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg())
-                        .executes(context -> {
-                          float angle_x = FloatArgumentType.getFloat(context, "angle");
-                          float x = toRadians(angle_x);
-
-                          DecimalFormat df = new DecimalFormat();
-                          df.setMaximumFractionDigits(config.decimalPrecision);
-                          String out = df.format(Math.sinh(x));
-                          String x_out = df.format(angle_x);
-                          context.getSource().sendFeedback(Text.literal("sinh(" + x_out + ") = " + out));
-                          return 1;
-                        })
+                        .executes(context -> trigOutline(context, "sinh", Math::sinh))
                     )
                 )
                 // cosh
                 .then(ClientCommandManager.literal("cosh")
                     .then(ClientCommandManager.argument("angle", FloatArgumentType.floatArg())
-                        .executes(context -> {
-                          float angle_x = FloatArgumentType.getFloat(context, "angle");
-                          float x = toRadians(angle_x);
-
-                          DecimalFormat df = new DecimalFormat();
-                          df.setMaximumFractionDigits(config.decimalPrecision);
-                          String out = df.format(Math.cosh(x));
-                          String x_out = df.format(angle_x);
-                          context.getSource().sendFeedback(Text.literal("cosh(" + x_out + ") = " + out));
-                          return 1;
-                        })
+                        .executes(context -> trigOutline(context, "cosh", Math::cosh))
                     )
                 )
                 // rand
@@ -525,6 +448,18 @@ public class MathmodClient implements ClientModInitializer {
 
 
         ));
+  }
+
+   static int trigOutline(CommandContext<FabricClientCommandSource> context, String name, Function<Double, Double> function) {
+      float angle_x = FloatArgumentType.getFloat(context, "angle");
+      float x = toRadians(angle_x);
+
+      DecimalFormat df = new DecimalFormat();
+      df.setMaximumFractionDigits(config.decimalPrecision);
+      String out = df.format(function.apply((double) x));
+      String x_out = df.format(angle_x);
+      context.getSource().sendFeedback(Text.literal(name + "(" + x_out + ") = " + out));
+      return 1;
   }
 
   private static float toRadians(float degrees) {
