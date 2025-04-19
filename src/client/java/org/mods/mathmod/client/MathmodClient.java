@@ -47,127 +47,127 @@ public class MathmodClient implements ClientModInitializer {
     // Load Config
     config = loadConfig();
 
-    ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-      dispatcher.register(
-          // Implements the "math" command
-          ClientCommandManager.literal("math")
-              // The "config" sub-command
-              .then(ClientCommandManager.literal("config")
-                  .then(ClientCommandManager.literal("precision")
-                      .then(ClientCommandManager.argument("value", IntegerArgumentType.integer(0))
-                          .executes(ctx -> {
-                            int v = IntegerArgumentType.getInteger(ctx, "value");
-                            if (v > 15) {
-                              v=15;
-                            }
-                            config.decimalPrecision = v;
-                            saveConfig();
-                            ctx.getSource().sendFeedback(
-                                Text.literal("Decimal precision set to " + v)
-                            );
-                            return 1;
-                          })
-                      )
-                  )
-              )
-              // The "add" sub-command
-              .then(ClientCommandManager.literal("add")
-                  .then(ClientCommandManager.argument("x", IntegerArgumentType.integer())
-                      .suggests(CommandUtils.suggestPlayerXZ)
-                      .then(ClientCommandManager.argument("y", IntegerArgumentType.integer())
-                          .suggests(CommandUtils.suggestPlayerXZ)
-                          .executes(context -> {
-                            int x = IntegerArgumentType.getInteger(context, "x");
-                            int y = IntegerArgumentType.getInteger(context, "y");
-                            context.getSource().sendFeedback(Text.literal("Result: " + (x + y)));
-                            return 1;
-                          })
-                      )
-                  )
-              )
-              // The "subtract" sub-command
-              .then(ClientCommandManager.literal("subtract")
-                  .then(ClientCommandManager.argument("x", IntegerArgumentType.integer())
-                      .suggests(CommandUtils.suggestPlayerXZ)
-                      .then(ClientCommandManager.argument("y", IntegerArgumentType.integer())
-                          .suggests(CommandUtils.suggestPlayerXZ)
-                          .executes(context -> {
-                            int x = IntegerArgumentType.getInteger(context, "x");
-                            int y = IntegerArgumentType.getInteger(context, "y");
-                            context.getSource().sendFeedback(Text.literal("Result: " + (x - y)));
-                            return 1;
-                          })
-                      )
-                  )
-              )
-              // The "multiply" sub-command
-              .then(ClientCommandManager.literal("multiply")
-                  .then(ClientCommandManager.argument("x", IntegerArgumentType.integer())
-                      .suggests(CommandUtils.suggestPlayerXZ)
-                      .then(ClientCommandManager.argument("y", IntegerArgumentType.integer())
-                          .suggests(CommandUtils.suggestPlayerXZ)
-                          .executes(context -> {
-                            int x = IntegerArgumentType.getInteger(context, "x");
-                            int y = IntegerArgumentType.getInteger(context, "y");
-                            context.getSource().sendFeedback(Text.literal("Result: " + (x * y)));
-                            return 1;
-                          })
-                      )
-                  )
-              )
-              // The "divide" sub-command
-              .then(ClientCommandManager.literal("divide")
-                  .then(ClientCommandManager.argument("x", IntegerArgumentType.integer())
-                      .suggests(CommandUtils.suggestPlayerXZ)
-                      .then(ClientCommandManager.argument("y", IntegerArgumentType.integer())
-                          .suggests(CommandUtils.suggestPlayerXZ)
-                          .executes(context -> {
-                            int x = IntegerArgumentType.getInteger(context, "x");
-                            int y = IntegerArgumentType.getInteger(context, "y");
-                            if (y == 0) {
-                              throw DIVIDE_BY_ZERO.create(); // This shows a red error in chat
-                            }
-                            context.getSource().sendFeedback(Text.literal("Result: " + (x / y)));
-                            return 1;
-                          })
-                      )
-                  )
-              )
-              // The "eval" sub-command
-              .then(ClientCommandManager.literal("eval")
-                  .then(ClientCommandManager.argument("expression", StringArgumentType.greedyString())
-                      .executes(context -> {
-                            String expr = StringArgumentType.getString(context, "expression");
-                            try {
-                              // Parse & evaluate
-                              Expression e = new ExpressionBuilder(expr)
-                                  .variables("pi", "e")
-                                  .build()
-                                  // Bind them to their Math constants
-                                  .setVariable("pi", Math.PI)
-                                  .setVariable("e", Math.E);
+    ClientCommandRegistrationCallback.EVENT.register(
+        (dispatcher, registryAccess) -> dispatcher.register(
+            // Implements the "math" command
+            ClientCommandManager.literal("math")
+                // The "config" sub-command
+                .then(ClientCommandManager.literal("config")
+                    .then(ClientCommandManager.literal("precision")
+                        .then(ClientCommandManager.argument("value", IntegerArgumentType.integer(0))
+                            .executes(ctx -> {
+                              int v = IntegerArgumentType.getInteger(ctx, "value");
+                              if (v > 15) {
+                                v = 15;
+                              }
+                              config.decimalPrecision = v;
+                              saveConfig();
+                              ctx.getSource().sendFeedback(
+                                  Text.literal("Decimal precision set to " + v)
+                              );
+                              return 1;
+                            })
+                        )
+                    )
+                )
+                // The "add" sub-command
+                .then(ClientCommandManager.literal("add")
+                    .then(ClientCommandManager.argument("x", IntegerArgumentType.integer())
+                        .suggests(CommandUtils.suggestPlayerXZ)
+                        .then(ClientCommandManager.argument("y", IntegerArgumentType.integer())
+                            .suggests(CommandUtils.suggestPlayerXZ)
+                            .executes(context -> {
+                              int x = IntegerArgumentType.getInteger(context, "x");
+                              int y = IntegerArgumentType.getInteger(context, "y");
+                              context.getSource().sendFeedback(Text.literal("Result: " + (x + y)));
+                              return 1;
+                            })
+                        )
+                    )
+                )
+                // The "subtract" sub-command
+                .then(ClientCommandManager.literal("subtract")
+                    .then(ClientCommandManager.argument("x", IntegerArgumentType.integer())
+                        .suggests(CommandUtils.suggestPlayerXZ)
+                        .then(ClientCommandManager.argument("y", IntegerArgumentType.integer())
+                            .suggests(CommandUtils.suggestPlayerXZ)
+                            .executes(context -> {
+                              int x = IntegerArgumentType.getInteger(context, "x");
+                              int y = IntegerArgumentType.getInteger(context, "y");
+                              context.getSource().sendFeedback(Text.literal("Result: " + (x - y)));
+                              return 1;
+                            })
+                        )
+                    )
+                )
+                // The "multiply" sub-command
+                .then(ClientCommandManager.literal("multiply")
+                    .then(ClientCommandManager.argument("x", IntegerArgumentType.integer())
+                        .suggests(CommandUtils.suggestPlayerXZ)
+                        .then(ClientCommandManager.argument("y", IntegerArgumentType.integer())
+                            .suggests(CommandUtils.suggestPlayerXZ)
+                            .executes(context -> {
+                              int x = IntegerArgumentType.getInteger(context, "x");
+                              int y = IntegerArgumentType.getInteger(context, "y");
+                              context.getSource().sendFeedback(Text.literal("Result: " + (x * y)));
+                              return 1;
+                            })
+                        )
+                    )
+                )
+                // The "divide" sub-command
+                .then(ClientCommandManager.literal("divide")
+                    .then(ClientCommandManager.argument("x", IntegerArgumentType.integer())
+                        .suggests(CommandUtils.suggestPlayerXZ)
+                        .then(ClientCommandManager.argument("y", IntegerArgumentType.integer())
+                            .suggests(CommandUtils.suggestPlayerXZ)
+                            .executes(context -> {
+                              int x = IntegerArgumentType.getInteger(context, "x");
+                              int y = IntegerArgumentType.getInteger(context, "y");
+                              if (y == 0) {
+                                throw DIVIDE_BY_ZERO.create(); // This shows a red error in chat
+                              }
+                              context.getSource().sendFeedback(Text.literal("Result: " + (x / y)));
+                              return 1;
+                            })
+                        )
+                    )
+                )
+                // The "eval" sub-command
+                .then(ClientCommandManager.literal("eval")
+                    .then(ClientCommandManager.argument("expression", StringArgumentType.greedyString())
+                        .executes(context -> {
+                              String expr = StringArgumentType.getString(context, "expression");
+                              try {
+                                // Parse & evaluate
+                                Expression e = new ExpressionBuilder(expr)
+                                    .variables("pi", "e")
+                                    .build()
+                                    // Bind them to their Math constants
+                                    .setVariable("pi", Math.PI)
+                                    .setVariable("e", Math.E);
 
-                              double result = e.evaluate();
+                                double result = e.evaluate();
 
-                              // Format using the decimal precision in the config
-                              DecimalFormat df = new DecimalFormat();
-                              df.setMaximumFractionDigits(config.decimalPrecision);
-                              String out = df.format(result);
-                              context.getSource()
-                                  .sendFeedback(Text.literal(expr + " = " + out));
-                            } catch (Exception ex) {
-                              // On parse/eval error, show red error text
-                              throw INVALID_EXPR.create();
+                                // Format using the decimal precision in the config
+                                DecimalFormat df = new DecimalFormat();
+                                df.setMaximumFractionDigits(config.decimalPrecision);
+                                String out = df.format(result);
+                                context.getSource()
+                                    .sendFeedback(Text.literal(expr + " = " + out));
+                              } catch (Exception ex) {
+                                // On parse/eval error, show red error text
+                                throw INVALID_EXPR.create();
+                              }
+
+                              return 1;
                             }
-
-                            return 1;
-                          }
-                      )
-                  )
-              )
-      );
-    });
+                        )
+                    )
+                )
+        ));
   }
+
   private ModConfig loadConfig() {
     // Method to load config from file
     try {
