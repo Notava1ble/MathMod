@@ -39,3 +39,4 @@ The features on this mod are:
 - Player coordinate auto suggestions
 - Editable configs for decimal precision
 - Multiple useful functions, such as "abs", "prime_factors" or "binomial"
+- You can add and persist variables, for remembering multiple things.
