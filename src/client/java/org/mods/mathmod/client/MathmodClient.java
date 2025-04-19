@@ -50,6 +50,7 @@ public class MathmodClient implements ClientModInitializer {
   public void onInitializeClient() {
     // Load Config
     config = loadConfig();
+    MathVariables variables = new MathVariables();
 
     ClientCommandRegistrationCallback.EVENT.register(
         (dispatcher, registryAccess) -> dispatcher.register(
@@ -69,6 +70,20 @@ public class MathmodClient implements ClientModInitializer {
                               ctx.getSource().sendFeedback(
                                   Text.literal("Decimal precision set to " + v)
                               );
+                              return 1;
+                            })
+                        )
+                    )
+                )
+                // The variable sub-command
+                .then(ClientCommandManager.literal("variable")
+                    .then(ClientCommandManager.argument("name", StringArgumentType.string())
+                        .then(ClientCommandManager.argument("value", FloatArgumentType.floatArg())
+                            .executes(context -> {
+                              String name = StringArgumentType.getString(context,"name");
+                              float value = FloatArgumentType.getFloat(context,"value");
+
+                              variables.setVariable(name, value);
                               return 1;
                             })
                         )
@@ -243,8 +258,8 @@ public class MathmodClient implements ClientModInitializer {
 
                           context.getSource().sendFeedback(Text.literal(
                               "prime_factors(" + x + ") = " + factors.stream()
-                              .map(String::valueOf)
-                              .collect(Collectors.joining(", "))
+                                  .map(String::valueOf)
+                                  .collect(Collectors.joining(", "))
                           ));
                           return 1;
                         })
