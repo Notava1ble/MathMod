@@ -165,6 +165,19 @@ public class MathmodClient implements ClientModInitializer {
                         )
                     )
                 )
+                // Other less useful math functions:
+                // "abs"
+                .then(ClientCommandManager.literal("abs")
+                    .then(ClientCommandManager.argument("x", IntegerArgumentType.integer())
+                        .suggests(CommandUtils.suggestPlayerXZ)
+                        .executes(context -> {
+                          int x = IntegerArgumentType.getInteger(context, "x");
+                          context.getSource().sendFeedback(Text.literal("Result: " + Math.abs(x)));
+                          return 1;
+                        })
+
+                    )
+                )
         ));
   }
 
