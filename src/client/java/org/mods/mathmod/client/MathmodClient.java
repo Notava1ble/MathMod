@@ -261,7 +261,7 @@ public class MathmodClient implements ClientModInitializer {
                                 context.getSource()
                                     .sendFeedback(Text.literal(expr + " = " + out));
                               } catch (Exception ex) {
-                                // On parse/eval error, show red error text
+                                // On parse/eval error, show red error text on chat.
                                 throw INVALID_EXPR.create();
                               }
 
