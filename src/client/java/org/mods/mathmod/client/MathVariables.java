@@ -30,6 +30,21 @@ public class MathVariables {
     return new ArrayList<>(variables.entrySet());
   }
 
+  // Return a map of variable names and their float values, filtering out non-float values
+  public Map<String, Double> getDoubleVariables() {
+    Map<String, Double> doubleVars = new HashMap<>();
+    for (Map.Entry<String, String> entry : variables.entrySet()) {
+      try {
+        double value = Double.parseDouble(entry.getValue());
+        doubleVars.put(entry.getKey(), value);
+      } catch (NumberFormatException e) {
+        // Ignore values that can't be parsed as floats
+      }
+    }
+    return doubleVars;
+  }
+
+
   public MathVariables() {
     variables = new HashMap<>();
     loadFromFile();

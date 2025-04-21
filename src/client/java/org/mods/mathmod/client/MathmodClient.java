@@ -22,10 +22,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -244,13 +241,19 @@ public class MathmodClient implements ClientModInitializer {
                         .executes(context -> {
                               String expr = StringArgumentType.getString(context, "expression");
                               try {
+                                Set<String> varNames = new HashSet<>(variables.getDoubleVariables().keySet());
+                                varNames.add("pi");
+                                varNames.add("e");
+
+
                                 // Parse & evaluate
                                 Expression e = new ExpressionBuilder(expr)
-                                    .variables("pi", "e")
+                                    .variables(varNames)
                                     .build()
                                     // Bind them to their Math constants
                                     .setVariable("pi", Math.PI)
-                                    .setVariable("e", Math.E);
+                                    .setVariable("e", Math.E)
+                                    .setVariables(variables.getDoubleVariables());
 
                                 double result = e.evaluate();
 
